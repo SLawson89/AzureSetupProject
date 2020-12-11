@@ -1,0 +1,29 @@
+---
+- name: Install metric beat
+  hosts: webservers
+  become: true
+  tasks:
+    # use command module
+  - name: Download metricbeat
+    command: curl -L -O https://artifacts.elastic.co/downloads/beat$    # Use command module
+  - name: install metricbeat
+    command: sudo dpkg -i metricbeat-7.6.1-amd64.deb
+
+    # Use copy module
+  - name: drop in metricbeat config
+    copy:
+      src: /etc/ansible/files/metricbeat-config.yml
+      dest: /etc/metricbeat/metricbeat.yml
+
+    # Command Module
+  - name: enable and configure docker module for metric beat
+    command: sudo metricbeat modules enable docker
+
+    # Use Command Module
+  - name: setup metric beat
+    command: sudo metricbeat setup
+
+    # Use command module
+  - name: metricbeat setup
+    command: sudo service metricbeat start
+
